@@ -1,8 +1,8 @@
 """
-flask-pyquery
-----------
-This extension for the `Flask <http://flask.pocoo.org/>`_ micro web framework
-allows developers to use `PyQuery Templates` instead of the default Jinja2
+Flask-PyQuery
+-------------
+This extension for the `Flask <http://flask.pocoo.org>`_ micro web framework
+allows developers to use PyQuery Templates instead of the default Jinja2
 templating engine.
 """
 import sys
