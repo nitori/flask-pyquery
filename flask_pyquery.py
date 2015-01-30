@@ -3,7 +3,6 @@ import importlib
 import os
 
 import flask
-from flask.helpers import locked_cached_property
 from flask.signals import template_rendered
 
 import pyquery
@@ -70,9 +69,8 @@ class Template:
         with open(self.path, 'r', encoding='utf-8') as fp:
             source = fp.read()
 
-        ctx = context_stack.top
         doc = pyquery.PyQuery(source, parser='html')
-        doc = self.renderer(doc)
+        doc = self.renderer(doc, context)
 
         if len(doc) != 1 or doc[0].tag != 'html':
             raise Exception('Invalid template.')
