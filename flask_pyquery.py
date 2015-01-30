@@ -112,7 +112,6 @@ def _create_lookup(app: flask.Flask) -> TemplateLookup:
     doctype = app.config['PYQUERY_DOCTYPE']
     kwargs = {
         'doctype': pq.doctype_names.get(doctype, doctype)
-
     }
 
     if isinstance(app.template_folder, (list, tuple)):
