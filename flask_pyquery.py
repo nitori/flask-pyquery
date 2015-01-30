@@ -58,6 +58,10 @@ class PyQueryTemplates:
         app.config.setdefault('PYQUERY_DOCTYPE', 'html5')
 
 
+class TemplateError(Exception):
+    pass
+
+
 class Template:
 
     def __init__(self, template_path, renderer, kwargs):
@@ -73,7 +77,9 @@ class Template:
         doc = self.renderer(doc, context)
 
         if len(doc) != 1 or doc[0].tag != 'html':
-            raise Exception('Invalid template.')
+            raise TemplateError(
+                'There should only be one root document '
+                'and it should be an <html> tag')
 
         return lxml.html.tostring(doc[0], doctype=self.kwargs['doctype'])
 
@@ -89,8 +95,8 @@ class TemplateLookup:
         pq = self.app.extensions['pyquery']
         func = getattr(pq.renderer_module, template_name, None)
         if func is None:
-            raise Exception('No such renderer {} in {}'
-                            .format(func, pq.renderer_module))
+            raise AttributeError('No such renderer {} in {}'
+                                 .format(func, pq.renderer_module))
 
         filename = '{}.html'.format(template_name)
         for directory in self.directories:
@@ -98,7 +104,7 @@ class TemplateLookup:
             if os.path.exists(template_path)\
                     and os.path.isfile(template_path):
                 return Template(template_path, func, self.kwargs)
-        raise Exception('No such template {!r}'.format(filename))
+        raise FileNotFoundError('No such template {!r}'.format(filename))
 
 
 def _create_lookup(app: flask.Flask) -> TemplateLookup:
