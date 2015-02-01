@@ -161,3 +161,23 @@ def render_template(template_name, **context):
     ctx = context_stack.top
     return _render(_lookup(ctx.app).get_template(template_name),
                    context, ctx.app)
+
+
+# helper methods.
+def _helper_replicate(self, func, data):
+    """Create a bunch of clones of the current
+    selected element. One for each element in `data`.
+
+    :param func: callable
+    :param data: iterable
+    """
+    for row in data:
+        clone = self.clone()
+        func(clone, row)
+        self.after(clone)
+    self.remove()
+    return self
+
+
+# inject those helpers
+pyquery.PyQuery.replicate = _helper_replicate
